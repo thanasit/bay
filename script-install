@@ -1,0 +1,124 @@
+Firewalld
+# systemctl enable firewalld
+# systemctl start firewalld
+# firewall-cmd --zone=public --add-port 80/tcp --permanent
+# firewall-cmd --zone=public --add-port 443/tcp --permanent
+# firewall-cmd --reload
+------------------------------------------------------------------------------------------
+
+Keepalived installation
+
+# yum install -y keepalived
+# mv /etc/keepalived/keepalived.conf /etc/keepalived/keepalived.conf.org
+# cp /vagrant/keepalived.conf /etc/keepalived/keepalived.conf
+
+vrrp_script chk_haproxy {
+  script "killall -0 haproxy" # check the haproxy process
+  interval 2 # every 2 seconds
+  weight 2 # add 2 points if OK
+}
+
+vrrp_instance VI_1 {
+  interface eth1 # interface to monitor
+  state MASTER # MASTER on haproxy, BACKUP on haproxy2
+  virtual_router_id 51
+  priority 101 # 101 on haproxy, 100 on haproxy2
+  virtual_ipaddress {
+    192.168.0.100 # virtual ip address
+  }
+  track_script {
+    chk_haproxy
+  }
+}
+
+# systemctl enable keepalived
+# systemctl start keepalived
+------------------------------------------------------------------------------------------
+
+HA proxy installation
+
+# yum info haproxy
+# yum install wget gcc openssl-devel pcre-static pcre-devel -y
+# tar xzvf /vagrant/haproxy-1.5.3.tar.gz
+# cd /vagrant/haproxy-1.5.3
+# make TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1 USE_CRYPT_H=1 USE_LIBCRYPT=1
+# make install
+# cp /usr/local/sbin/haproxy /usr/sbin/
+# cp examples/haproxy.init /etc/init.d/haproxy
+# chmod 755 /etc/init.d/haproxy
+# mkdir -p /etc/haproxy
+# mkdir -p /run/haproxy
+# mkdir -p /var/lib/haproxy
+# touch /var/lib/haproxy/stats
+# useradd -r haproxy
+# haproxy -vv
+# vim /etc/firewalld/services/haproxy-http.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+<short>HAProxy-HTTP</short>
+<description>HAProxy load-balancer</description>
+<port protocol="tcp" port="80"/>
+</service>
+
+# vim /etc/firewalld/services/haproxy-https.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+<short>HAProxy-HTTPS</short>
+<description>HAProxy load-balancer</description>
+<port protocol="tcp" port="443"/>
+</service>
+
+# restorecon /etc/firewalld/services/haproxy-http.xml
+# chmod 640 /etc/firewalld/services/haproxy-http.xml
+# restorecon /etc/firewalld/services/haproxy-https.xml
+# chmod 640 /etc/firewalld/services/haproxy-https.xml
+
+# cp /vagrant/haproxy.cfg /etc/haproxy/
+# mkdir -p /etc/haproxy/sslkeys
+# cp /vagrant/private/marlo.com.au.local.pem /etc/haproxy/sslkeys/
+
+
+#---------------------------------------------------------------------
+# See:  http://haproxy.1wt.eu/download/1.5/doc/configuration.txt
+#---------------------------------------------------------------------
+global
+    log         /dev/log local2
+    chroot      /var/lib/haproxy
+    pidfile     /var/run/haproxy.pid
+    maxconn     4000
+    user        haproxy
+    group       haproxy
+    daemon
+    tune.ssl.default-dh-param 2048
+
+defaults
+    mode        http
+    log         global
+    option      dontlognull
+    option      httpclose
+    option      httplog
+    option      forwardfor
+    option      redispatch
+    timeout connect 10000 # default 10 second time out if a backend is not found
+    timeout client 300000
+    timeout server 300000
+    maxconn     60000
+    retries     3
+
+frontend  main
+    bind                :80
+    bind                :443 ssl crt /etc/haproxy/sslkeys/marlo.com.au.local.pem
+    #reqadd X-Forwarded-Proto:\ http
+    default_backend     jon
+
+
+backend jon
+    balance     roundrobin
+    server   jon   192.168.20.55:7080 check
+
+
+# setsebool -P haproxy_connect_any=1
+
+# shutdown -r 0
