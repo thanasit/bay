@@ -6,19 +6,23 @@ end
 Vagrant.configure("2") do |config|
 
   # This is the jon server host
-  config.vm.define "jon" do |jon|
-    jon.vm.box = "centos/7"
-    jon.vm.hostname = "jon"
-    jon.vm.synced_folder "./jon/", "/vagrant", rsync__exclude: ".git/ ./haproxy"
-    jon.vm.network "private_network", ip: "192.168.20.55", :netmask => "255.255.255.0",  auto_config: true
-    jon.vm.provider "virtualbox" do |vb|
+  config.vm.define "jon" do |jon_config|
+    jon_config.vm.box = "centos/7"
+    jon_config.vm.hostname = "jon"
+    jon_config.vm.synced_folder "./jon/", "/vagrant", rsync__exclude: ".git/,./haproxy"
+    jon_config.vm.network "private_network", ip: "192.168.20.55", :netmask => "255.255.255.0",  auto_config: true
+    jon_config.vm.provider "virtualbox" do |vb|
       vb.customize ["modifyvm", :id, "--memory", "1024"]
     end
-    jon.vm.provision :shell, path: "scripts/javaInstall.sh"
-    jon.vm.provision :shell, path: "scripts/passwordAuthentication.sh"
-#    jon.vm.provision "shell", inline: <<-SHELL
-#      SHELL
-    
+    jon_config.vm.provision :shell, path: "scripts/bootstrap.sh"
+    jon_config.vm.provision :shell, path: "scripts/passwordAuthentication.sh"
+    jon_config.vm.provision "shell", inline: <<-SHELL
+      sudo mkdir -p /apps/jon/
+    SHELL
+    jon_config.vm.provision :shell, path: "scripts/javaInstall.sh"
+    # jon_config.vm.provision :shell, path: "scripts/adduser.sh"
+    jon_config.vm.provision :shell, path: "scripts/postgresInstall.sh"
+
   end
 
   #This is the haproxy host
@@ -30,6 +34,7 @@ Vagrant.configure("2") do |config|
     haproxy_config.vm.provider "virtualbox" do |vb|
       vb.customize ["modifyvm", :id, "--memory", "1024"]
     end
+    haproxy_config.vm.provision :shell, path: "scripts/bootstrap.sh"
     haproxy_config.vm.provision :shell, path: "scripts/passwordAuthentication.sh"
     haproxy_config.vm.provision "shell", inline: <<-SHELL
         sudo cp -r /vagrant/* /home/vagrant/

@@ -3,7 +3,6 @@ if [ "`systemctl is-active haproxy`" == "active" ]; then
     echo "HAproxy is actived"
 else
     sudo yum info haproxy
-    sudo yum install -y wget gcc openssl-devel pcre-static pcre-devel
     cd /home/vagrant/
     sudo tar -xzvf /home/vagrant/haproxy-1.5.3.tar.gz
     cd /home/vagrant/haproxy-1.5.3/
