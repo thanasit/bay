@@ -46,6 +46,7 @@ Vagrant.configure("2") do |config|
           sudo systemctl start firewalld
           sudo firewall-cmd --zone=public --add-port 80/tcp --permanent
           sudo firewall-cmd --zone=public --add-port 443/tcp --permanent
+          sudo firewall-cmd --zone=public --add-port 5500/tcp --permanent
           sudo firewall-cmd --reload
           sudo firewall-cmd --list-ports
         fi
