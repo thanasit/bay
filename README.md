@@ -46,6 +46,24 @@ After JON box is it up, then following command as below.
 $ vagrant ssh jon
 ````
 
+Databases (Postgresql) Configuration
+````text
+$ su - postgres
+$ psql
+
+postgres=# ALTER USER postgres PASSWORD 'password';
+ALTER ROLE
+postgres=# CREATE USER rhqadmin PASSWORD 'rhqadmin';
+CREATE ROLE
+postgres=# CREATE DATABASE rhq OWNER rhqadmin;
+CREATE DATABASE
+````
+
+Then, restart the database service.
+````bash
+sudo systemctl restart postgres-9.6
+````
+
 JON Installation
 ````bash
 $ sudo useradd jboss
