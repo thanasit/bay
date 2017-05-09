@@ -127,33 +127,33 @@ https://192.168.20.55:7443
 
 Installation
 ````text
-sudo yum info haproxy
-cd /home/vagrant/
-sudo tar -xzvf /home/vagrant/haproxy-1.5.3.tar.gz
-cd /home/vagrant/haproxy-1.5.3/
-sudo make TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1 USE_CRYPT_H=1 USE_LIBCRYPT=1
-sudo make install
-sudo cp -r /usr/local/sbin/haproxy /usr/sbin/
-sudo cp -r /home/vagrant/haproxy-1.5.3/examples/haproxy.init /etc/init.d/haproxy
-sudo chmod 755 /etc/init.d/haproxy
-sudo mkdir -p /etc/haproxy
-sudo mkdir -p /run/haproxy
-sudo mkdir -p /var/lib/haproxy
-sudo touch /var/lib/haproxy/stats
-sudo haproxy -vv
+$ sudo yum info haproxy
+$ cd /home/vagrant/
+$ sudo tar -xzvf /home/vagrant/haproxy-1.5.3.tar.gz
+$ cd /home/vagrant/haproxy-1.5.3/
+$ sudo make TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1 USE_CRYPT_H=1 USE_LIBCRYPT=1
+$ sudo make install
+$ sudo cp -r /usr/local/sbin/haproxy /usr/sbin/
+$ sudo cp -r /home/vagrant/haproxy-1.5.3/examples/haproxy.init /etc/init.d/haproxy
+$ sudo chmod 755 /etc/init.d/haproxy
+$ sudo mkdir -p /etc/haproxy
+$ sudo mkdir -p /run/haproxy
+$ sudo mkdir -p /var/lib/haproxy
+$ sudo touch /var/lib/haproxy/stats
+$ sudo haproxy -vv
 ````
 
 Selinux for Centos 7
 ````text
-sudo cp -r /home/vagrant/haproxy-http.xml /etc/firewalld/services/haproxy-http.xml
-sudo cp -r /home/vagrant/haproxy-https.xml /etc/firewalld/services/haproxy-https.xml
-sudo restorecon /etc/firewalld/services/haproxy-http.xml
-sudo chmod 640 /etc/firewalld/services/haproxy-http.xml
-sudo restorecon /etc/firewalld/services/haproxy-https.xml
-sudo chmod 640 /etc/firewalld/services/haproxy-https.xml
-#sudo firewall-cmd --zone=public --add-service=haproxy-http --permanent
-#sudo firewall-cmd --zone=public --add-service=haproxy-https --permanent
-#sudo firewall-cmd --reload
+$ sudo cp -r /home/vagrant/haproxy-http.xml /etc/firewalld/services/haproxy-http.xml
+$ sudo cp -r /home/vagrant/haproxy-https.xml /etc/firewalld/services/haproxy-https.xml
+$ sudo restorecon /etc/firewalld/services/haproxy-http.xml
+$ sudo chmod 640 /etc/firewalld/services/haproxy-http.xml
+$ sudo restorecon /etc/firewalld/services/haproxy-https.xml
+$ sudo chmod 640 /etc/firewalld/services/haproxy-https.xml
+# $ sudo firewall-cmd --zone=public --add-service=haproxy-http --permanent
+# $ sudo firewall-cmd --zone=public --add-service=haproxy-https --permanent
+# $ sudo firewall-cmd --reload
 ````
 
 Selinux for Centos 6
@@ -163,25 +163,28 @@ Selinux for Centos 6
 
 Create user
 ````text
-sudo id -u haproxy &>/dev/null || useradd -s /usr/sbin/nologin -r haproxy
+$ sudo id -u haproxy &>/dev/null || useradd -s /usr/sbin/nologin -r haproxy
 ````
 
 Configuration and SSL
 ````text
-sudo cp -r /home/vagrant/haproxy.cfg /etc/haproxy/
-sudo mkdir -p /etc/haproxy/sslkeys
-sudo cp -r /home/vagrant/private/marlo.com.au.local.pem /etc/haproxy/sslkeys/
+$ sudo cp -r /home/vagrant/haproxy.cfg /etc/haproxy/
+$ sudo mkdir -p /etc/haproxy/sslkeys
+$ sudo cp -r /home/vagrant/private/marlo.com.au.local.pem /etc/haproxy/sslkeys/
 ````
 
 Enable service
 ````text
-sudo chkconfig haproxy on
-sudo chkconfig --level 2345 haproxy on
+$ sudo chkconfig haproxy on
+$ sudo chkconfig --level 2345 haproxy on
 ````
 
 Add Selinux policy
 ````text
-sudo setsebool -P haproxy_connect_any=1
+$ sudo setsebool -P haproxy_connect_any=1
 ````
 
 After done restart server.
+````text
+$ sudo shutdown -r 0
+````

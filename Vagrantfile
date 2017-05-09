@@ -41,7 +41,7 @@ Vagrant.configure("2") do |config|
         #sudo chown -R vagrant:vagrant /home/vagrant/*
         # For Centos 7
         if [ "`systemctl is-active firewalld`" == "active" ]; then
-          echo "Firewalld is actived"
+          echo "Firewalld is actived."
         else
           sudo systemctl enable firewalld
           sudo systemctl start firewalld
@@ -52,7 +52,16 @@ Vagrant.configure("2") do |config|
           sudo firewall-cmd --list-ports
         fi
         # For Centos 6
-        # To be continue
+        # sudo ps -ef | grep iptables
+        # if [ $?  -eq "0" ]; then
+        #   echo "IPtables is running."
+        # else
+        #   sudo service iptables start
+        #   sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+        #   sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+        #   sudo iptables -A INPUT -p tcp --dport 5500 -j ACCEPT
+        #   sudo service iptables save
+        # fi
     SHELL
     haproxy_config.vm.provision :shell, path: "scripts/javaInstall.sh"
     haproxy_config.vm.provision :shell, path: "scripts/keepalivedInstall.sh"

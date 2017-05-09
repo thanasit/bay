@@ -16,6 +16,7 @@ else
     sudo mkdir -p /var/lib/haproxy
     sudo touch /var/lib/haproxy/stats
     sudo haproxy -vv
+
     # Centos 7
     sudo cp -r /home/vagrant/haproxy-http.xml /etc/firewalld/services/haproxy-http.xml
     sudo cp -r /home/vagrant/haproxy-https.xml /etc/firewalld/services/haproxy-https.xml
@@ -26,6 +27,7 @@ else
     #sudo firewall-cmd --zone=public --add-service=haproxy-http --permanent
     #sudo firewall-cmd --zone=public --add-service=haproxy-https --permanent
     #sudo firewall-cmd --reload
+
     # Centos 6
 
     sudo id -u haproxy &>/dev/null || useradd -s /usr/sbin/nologin -r haproxy
