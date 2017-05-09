@@ -39,6 +39,7 @@ Vagrant.configure("2") do |config|
     haproxy_config.vm.provision "shell", inline: <<-SHELL
         sudo cp -r /vagrant/* /home/vagrant/
         #sudo chown -R vagrant:vagrant /home/vagrant/*
+        # For Centos 7
         if [ "`systemctl is-active firewalld`" == "active" ]; then
           echo "Firewalld is actived"
         else
@@ -50,6 +51,8 @@ Vagrant.configure("2") do |config|
           sudo firewall-cmd --reload
           sudo firewall-cmd --list-ports
         fi
+        # For Centos 6
+        # To be continue
     SHELL
     haproxy_config.vm.provision :shell, path: "scripts/javaInstall.sh"
     haproxy_config.vm.provision :shell, path: "scripts/keepalivedInstall.sh"
