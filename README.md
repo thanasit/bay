@@ -1,4 +1,5 @@
-# BAY
+BAY
+=======================================================
 JBOSS Operation Network and HA proxy
 
 ````text
@@ -40,6 +41,7 @@ $ vagrant up haproxy
 ````
 
 **JON**
+------------------------------------------------------
 
 After JON box is it up, then following command as below.
 ````bash
@@ -102,6 +104,7 @@ http://192.168.20.55:7080
 ````
 
 **Securing server and agent communications**
+------------------------------------------------------
 
 JON server can be disabled by making the following change to ``${RHQ_SERVER_HOME}/bin/rhq-server.properties``
 ````smartyconfig
@@ -124,6 +127,7 @@ https://192.168.20.55:7443
 ````
 
 **HA proxy**
+------------------------------------------------------
 
 Installation
 ````text
