@@ -69,7 +69,8 @@ sudo systemctl restart postgres-9.6
 JON Installation
 ````bash
 $ sudo useradd jboss
-$ sudo passed jboss
+$ sudo passwd jboss
+$ sudo usermod -aG wheel jboss
 ````
 
 Copy `jon-server-3.3.0.GA.zip` to `/apps/jon/` destination path. Next step create link JON server.
