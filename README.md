@@ -71,7 +71,6 @@ JON Installation
 ````bash
 $ sudo useradd --no-create-home --system --user-group jon
 $ sudo passwd -d jon
-$ sudo usermod -aG wheel jon
 ````
 
 Copy `jon-server-3.3.0.GA.zip` to `/apps/jon/` destination path. Next step create link JON server.
