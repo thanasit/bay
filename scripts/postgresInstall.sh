@@ -6,6 +6,7 @@ sudo rpm -Uvh https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-
 sudo yum install -y postgresql96-server postgresql96
 # Initializing PGDATA
 sudo /usr/pgsql-9.6/bin/postgresql96-setup initdb
+#sudo /usr/pgsql-9.6/bin/postgresql96-setup initdb -D /mnt/db/pgsql/9.6/data/
 # PostgreSQL data directory Path: /var/lib/pgsql/9.6/data/
 # Start PostgreSQL Server
 sudo systemctl start postgresql-9.6

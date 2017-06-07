@@ -63,14 +63,15 @@ CREATE DATABASE
 
 Then, restart the database service.
 ````bash
-sudo systemctl restart postgres-9.6
+$ sudo systemctl enable postgres-9.6
+$ sudo systemctl restart postgres-9.6
 ````
 
 JON Installation
 ````bash
-$ sudo useradd jboss
-$ sudo passwd jboss
-$ sudo usermod -aG wheel jboss
+$ sudo useradd --no-create-home --system --user-group jon
+$ sudo passwd -d jon
+$ sudo usermod -aG wheel jon
 ````
 
 Copy `jon-server-3.3.0.GA.zip` to `/apps/jon/` destination path. Next step create link JON server.
@@ -80,7 +81,8 @@ $ sudo unzip jon-server-3.3.0.GA.zip
 $ sudo ln -s /apps/jon/jon-server-3.3.0.GA/ /apps/jon/current
 $ sudo mv /apps/jon/current/bin/rhq-server.properties /apps/jon/current/bin/rhq-server.properties.org 
 $ sudo cp /vagrant/rhq-server.properties /apps/jon/current/bin/
-$ sudo ./rhqclt install --start
+$ sudo chown -r jon:jon /apps/jon
+$ su -m jon -c './apps/jon/current/bin/rhqclt install --start'
 
 06:21:40,773 INFO  [org.jboss.modules] JBoss Modules version 1.3.3.Final-redhat-1
 
@@ -119,7 +121,7 @@ rhq.communications.connector.transport=sslservlet
 
 Restart JON server
 ````bash
-$ sudo ./rhqctl restart
+$ su -m jon -c './apps/jon/current/bin/rhqclt restart'
 ````
 
 The server URL is https://hostname:7443. For example: 
