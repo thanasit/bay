@@ -32,12 +32,12 @@ Vagrant.configure("2") do |config|
     eap_config.vm.synced_folder "./eap/", "/vagrant", rsync__exclude: ".git/,./haproxy"
     eap_config.vm.network "private_network", ip: "192.168.20.56", :netmask => "255.255.255.0",  auto_config: true
     eap_config.vm.provider "virtualbox" do |vb|
-      vb.customize ["modifyvm", :id, "--memory", "1024"]
+      vb.customize ["modifyvm", :id, "--memory", "2048"]
     end
     eap_config.vm.provision :shell, path: "scripts/bootstrap.sh"
     eap_config.vm.provision :shell, path: "scripts/passwordAuthentication.sh"
     eap_config.vm.provision "shell", inline: <<-SHELL
-      sudo mkdir -p /apps/jboss/
+      sudo mkdir -p /apps/jon-agent/
     SHELL
     eap_config.vm.provision :shell, path: "scripts/javaInstall.sh"
     # eap_config.vm.provision :shell, path: "scripts/adduser.sh"

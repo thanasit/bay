@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 export RHQ_JAVA_HOME="/usr/lib/jvm/jre"
 export RHQ_AGENT_USER="jon"
 export RHQ_AGENT_HOME="/apps/jon/rhq-agent"
